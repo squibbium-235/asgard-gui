@@ -12,7 +12,7 @@ This starter version contains:
 - cards, labels, buttons, nav items, and simple layout
 - a demo app in `examples/demo`
 
-It is very early. The text renderer currently uses `SDL_RenderDebugText`
+It is very early. The text renderer currently uses `SDL_RenderDebugText`, which isnt ideal
 
 ## Requirements
 
