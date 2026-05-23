@@ -56,14 +56,23 @@ Input :: struct {
 	quit_requested: bool,
 }
 
+// The layout mode used by a layout stack entry.
+Layout_Kind :: enum {
+	Column,
+	Row,
+}
+
 // A single layout stack entry.
 //
 // Layouts are pushed by containers such as columns, rows, and cards.
 // Widgets consume space from the active layout using `next_rect`.
 Layout :: struct {
-	cursor:  Vec2,
-	width:   f32,
-	spacing: f32,
+	kind:       Layout_Kind,
+	cursor:     Vec2,
+	width:      f32,
+	height:     f32,
+	spacing:    f32,
+	item_width: f32,
 }
 
 // Visual style values used by built-in widgets.

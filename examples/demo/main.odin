@@ -52,6 +52,10 @@ build_demo_ui :: proc(ctx: ^gui.Context, click_count: ^int, enabled: ^bool, volu
 		fmt.println("Checkbox changed")
 	}
 
+	if gui.toggle(ctx, "Use modern toggle", enabled) {
+		fmt.println("Toggle changed")
+	}
+
 	if gui.slider_f32(ctx, "Volume", volume, 0, 1) {
 		fmt.println("Slider changed")
 	}
@@ -62,10 +66,15 @@ build_demo_ui :: proc(ctx: ^gui.Context, click_count: ^int, enabled: ^bool, volu
 
 	gui.spacer(ctx, 10)
 
-	stat_y := main.y + 230
-	gui.stat_card(ctx, {main.x + 22,  stat_y, 190, 92}, "Clicks", fmt.ctprintf("%i", click_count^))
-	gui.stat_card(ctx, {main.x + 236, stat_y, 190, 92}, "Backend", "SDL3")
-	gui.stat_card(ctx, {main.x + 450, stat_y, 190, 92}, "Mode", "Package")
+	gui.spacer(ctx, 12)
+
+	stat_row := gui.next_rect(ctx, 122)
+
+	gui.begin_row(ctx, stat_row, 3)
+	gui.stat_card(ctx, gui.next_rect(ctx, 92), "Clicks", fmt.ctprintf("%i", click_count^))
+	gui.stat_card(ctx, gui.next_rect(ctx, 92), "Backend", "SDL3")
+	gui.stat_card(ctx, gui.next_rect(ctx, 92), "Mode", "Package")
+	gui.end_row(ctx)
 
 }
 

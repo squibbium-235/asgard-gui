@@ -83,6 +83,61 @@ checkbox :: proc(ctx: ^Context, text: cstring, value: ^bool) -> bool {
 	return changed
 }
 
+// Displays a toggle switch bound to a boolean value.
+//
+// Returns true when the value changes.
+toggle :: proc(ctx: ^Context, text: cstring, value: ^bool) -> bool {
+	id := next_widget_id(ctx)
+	r  := next_rect(ctx, 36)
+
+	switch_rect := Rect {r.x, r.y + 5, 52, 26}
+
+	hovered := rect_contains(r, ctx.input.mouse_pos)
+	if hovered {
+		ctx.hot = id
+	}
+
+	if hovered && ctx.input.mouse_pressed {
+		ctx.active = id
+	}
+
+	changed := false
+	if ctx.input.mouse_released {
+		if hovered && ctx.active == id {
+			value^ = !value^
+			changed = true
+		}
+		if ctx.active == id {
+			ctx.active = 0
+		}
+	}
+
+	bg := ctx.style.button
+	if value^ {
+		bg = ctx.style.accent
+	}
+	if ctx.hot == id && !value^ {
+		bg = ctx.style.button_hot
+	}
+	if ctx.active == id && !value^ {
+		bg = ctx.style.button_active
+	}
+
+	rounded_rect(ctx, switch_rect, 13, bg)
+
+	knob_x := switch_rect.x + 4
+	if value^ {
+		knob_x = switch_rect.x + switch_rect.w - 22
+	}
+
+	knob := Rect {knob_x, switch_rect.y + 4, 18, 18}
+	rounded_rect(ctx, knob, 9, ctx.style.text)
+
+	text_at(ctx, {r.x + 66, r.y + 11}, text, ctx.style.text)
+
+	return changed
+}
+
 // Displays a horizontal floating-point slider.
 //
 // The value is clamped between `min_value` and `max_value`.
