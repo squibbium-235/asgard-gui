@@ -5,7 +5,7 @@ package main
 import "core:fmt"
 import gui "../../src/asgard"
 
-build_demo_ui :: proc(ctx: ^gui.Context, click_count: ^int) {
+build_demo_ui :: proc(ctx: ^gui.Context, click_count: ^int, enabled: ^bool, volume: ^f32, progress: ^f32) {
 	s := ctx.style
 
 	sidebar := gui.Rect {20, 20, 220, 560}
@@ -46,6 +46,20 @@ build_demo_ui :: proc(ctx: ^gui.Context, click_count: ^int) {
 		fmt.println("Secondary action clicked")
 	}
 
+	gui.separator(ctx)
+
+	if gui.checkbox(ctx, "Enable very serious option", enabled) {
+		fmt.println("Checkbox changed")
+	}
+
+	if gui.slider_f32(ctx, "Volume", volume, 0, 1) {
+		fmt.println("Slider changed")
+	}
+
+	gui.progress_bar(ctx, progress^, "Progress")
+
+	gui.spacer(ctx, 10)
+
 	gui.spacer(ctx, 10)
 
 	stat_y := main.y + 230
@@ -53,7 +67,6 @@ build_demo_ui :: proc(ctx: ^gui.Context, click_count: ^int) {
 	gui.stat_card(ctx, {main.x + 236, stat_y, 190, 92}, "Backend", "SDL3")
 	gui.stat_card(ctx, {main.x + 450, stat_y, 190, 92}, "Mode", "Package")
 
-	gui.text_at(ctx, {main.x + 28, main.y + main.h - 48}, "Next step: split src/asgard/asgard.odin into smaller files.", s.text_muted)
 }
 
 main :: proc() {
@@ -64,10 +77,13 @@ main :: proc() {
 	defer gui.app_destroy(app)
 
 	click_count := 0
+	enabled := true
+	volume: f32 = 0.35
+	progress: f32 = 0.62
 
 	for gui.app_running(app) {
 		gui.app_begin_frame(app)
-		build_demo_ui(gui.app_context(app), &click_count)
+		build_demo_ui(gui.app_context(app), &click_count, &enabled, &volume, &progress)
 		gui.app_end_frame(app)
 	}
 }
